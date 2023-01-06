@@ -22,6 +22,9 @@ services:
     App\Api\Action\:
         resource: '../src/Api/Action/**/Handler'
 
+    App\Command\:
+        resource: '../src/Command'
+
 #    App\:
 #        resource: '../src/'
 #        exclude:
