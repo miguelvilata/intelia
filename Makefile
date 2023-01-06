@@ -5,7 +5,7 @@ PHP_UNIT := ./vendor/symfony/phpunit-bridge/bin/simple-phpunit -c app
 
 .PHONY: init
 init:
-	make start
+	make recreate
 	make composer-install
 	make db-schema-load
 	make fix-permissions
