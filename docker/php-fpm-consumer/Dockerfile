@@ -1,5 +1,4 @@
-FROM php:8.0.13-fpm
-#FROM bitnami/php-fpm:8.1-prod
+FROM php:8.2.0-fpm
 
 ARG DEBUG=false
 
@@ -13,12 +12,6 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen  \
     &&  echo "es_ES.UTF-8 UTF-8" >> /etc/locale.gen \
     &&  locale-gen
 
-RUN curl -sS https://getcomposer.org/installer | php -- \
-    &&  mv composer.phar /usr/local/bin/composer
-
-RUN curl -sS https://get.symfony.com/cli/installer | bash \
-    &&  mv /root/.symfony/bin/symfony /usr/local/bin
-
 RUN docker-php-ext-configure \
             intl \
     &&  docker-php-ext-install \
@@ -26,16 +19,7 @@ RUN docker-php-ext-configure \
 
 RUN pecl install apcu && docker-php-ext-enable apcu
 
-RUN #npm install --global yarn
-
-RUN git config --global user.email "miguel.vilata@gmail.com" \
-    &&  git config --global user.name "Miguel Uve"
-
-#CMD tail -f /dev/null
-
-RUN apt-get install -y ffmpeg
 RUN apt-get install -y vim
-RUN apt-get install -y libimage-exiftool-perl
 
 RUN docker-php-ext-install exif
 RUN docker-php-ext-configure exif \
@@ -52,13 +36,9 @@ RUN if [ 1 ] ; then \
 COPY "./ini/php.ini-development" "/usr/local/etc/php/php.ini"
 COPY "./ini/docker-php-ext-xdebug.ini" "/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"
 COPY "./scripts/message-consumer.sh" "/bin/message-consumer.sh"
-#COPY "./supervisor/messenger-worker.conf" "/etc/supervisor/conf.d/messenger-worker.conf"
 
 RUN if [ 1 ] ; then \
       docker-php-ext-enable xdebug; fi ;
 
-#RUN ["chmod", "+x", "/var/www/resources/scripts/message-consumer.sh"]
-
-#ENTRYPOINT ["bash", "/var/www/resources/scripts/message-consumer.sh"]
 ENTRYPOINT ["bash", "/bin/message-consumer.sh"]
 

@@ -1,5 +1,4 @@
-FROM php:8.0.13-fpm
-#FROM bitnami/php-fpm:8.1-prod
+FROM php:8.2.0-fpm
 
 ARG DEBUG=false
 
