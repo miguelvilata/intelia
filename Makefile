@@ -117,10 +117,9 @@ composer-dump-autoload:
 #test: see: https://docs.google.com/document/d/1oxCaf2mPqk2P7pGLtHfAzIxSPo8t_qyI00GmqNUId4Q/edit?usp=sharing
 .PHONY: test
 test:
-# 	make start
-# 	make composer-dump-autoload
-# 	$(DOCKER_COMPOSE) run docker-php-fpm rm -rf app/logs/* app/cache/*
-	make test-phpunit
+	make start
+	make cache-clear
+	$(DOCKER_COMPOSE) run --rm -u $(UID):$(GID) docker-php-fpm php $(PHP_UNIT)
 
 #npm
 .PHONY: shell-npm
