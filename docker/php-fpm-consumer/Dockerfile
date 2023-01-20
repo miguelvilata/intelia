@@ -1,4 +1,4 @@
-FROM php:8.2.0-fpm
+FROM php:7.4.0-fpm
 
 ARG DEBUG=false
 
@@ -27,18 +27,10 @@ RUN docker-php-ext-configure exif \
 
 WORKDIR /var/www
 
-#xdebug
-RUN export XDEBUG_MODE=debug
-
-RUN if [ 1 ] ; then \
-    pecl install xdebug; fi ;
-
 COPY "./ini/php.ini-development" "/usr/local/etc/php/php.ini"
 COPY "./ini/docker-php-ext-xdebug.ini" "/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"
 COPY "./scripts/message-consumer.sh" "/bin/message-consumer.sh"
 
-RUN if [ 1 ] ; then \
-      docker-php-ext-enable xdebug; fi ;
 
 ENTRYPOINT ["bash", "/bin/message-consumer.sh"]
 

@@ -16,3 +16,5 @@ resources/test/
 
 .gitignore.swp
 .phpunit.result.cache
+.php-cs-fixer.cache
+tools

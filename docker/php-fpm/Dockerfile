@@ -1,6 +1,7 @@
-FROM php:8.2.0-fpm
+FROM php:7.4.0-fpm
 
 ARG DEBUG=false
+ARG REMOTE_HOST="127.0.0.1"
 
 RUN apt-get update \
     &&  apt-get install -y --no-install-recommends \
@@ -42,15 +43,14 @@ RUN docker-php-ext-configure exif \
 
 WORKDIR /var/www
 
-#xdebug
-RUN export XDEBUG_MODE=debug
+# DEBUG
+RUN if [ $DEBUG = "true" ] ; then \
+    pecl install xdebug-2.6.0; \
+    docker-php-ext-enable xdebug;  fi ;
 
-RUN if [ 1 ] ; then \
-    pecl install xdebug; fi ;
+RUN if [ $DEBUG = "true" ] ; then \
+      cp /usr/local/etc/php/temporal_docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+      echo "\nxdebug.remote_host="$REMOTE_HOST >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; fi ;
 
 COPY "./ini/php.ini-development" "/usr/local/etc/php/php.ini"
 COPY "./ini/docker-php-ext-xdebug.ini" "/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"
-#COPY "./supervisor/messenger-worker.conf" "/etc/supervisor/conf.d/messenger-worker.conf"
-
-RUN if [ 1 ] ; then \
-      docker-php-ext-enable xdebug; fi ;
